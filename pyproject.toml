@@ -1,0 +1,29 @@
+[project]
+name = "spatialbot-test"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "TAKOS2022", email = "justin.takodjou.1@ulaval.ca" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "flask>=3.1.0",
+    "folium>=0.19.4",
+    "geoalchemy>=0.7.2",
+    "geopandas>=1.0.1",
+    "openai>=1.63.0",
+    "psycopg2>=2.9.10",
+    "pytest>=8.3.4",
+    "python-dotenv>=1.0.1",
+    "streamlit>=1.42.0",
+    "streamlit-folium>=0.24.0",
+    "yfinance>=0.2.53",
+]
+
+[project.scripts]
+spatialbot-test = "spatialbot_test:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

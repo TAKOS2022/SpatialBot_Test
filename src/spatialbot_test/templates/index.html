@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>My first WebGIS Bot</title>
+    <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script> -->
+    <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css"> -->
+   
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <!-- Load font -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"> 
+     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css">
+     <!-- Add sidebar plugins -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='plugins/sidebar2/leaflet-sidebar.css') }}" >
+    <!-- Link to the external CSS file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+    <!-- Include Ajax -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.0/leaflet.css">
+    <!-- Include bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <!-- Include jquery -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='plugins/jquery/jquery-ui.min.css') }}" > 
+    
+    
+  
+
+</head>
+<body>
+    <div id="sidebar" class="sidebar collapsed">
+        <!-- Nav tabs -->
+        <div class="sidebar-tabs">
+            <ul role="tablist">
+                <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
+                <li><a href="#loadingdata" role="tab"><i class="fa fa-upload"></i></a></li>
+                <li><a href="#chat" role="tab"><i class="fa fa-wechat"></i></a></li>
+                
+            </ul>
+
+            <ul role="tablist">
+                <li><a href="#settings" role="tab"><i class="fa fa-gear"></i></a></li>
+            </ul>
+        </div>
+
+        <!-- Tab panes -->
+        <div class="sidebar-content">
+            <div class="sidebar-pane" id="home">
+                <h1 class="sidebar-header">
+                    Spatial Bot App
+                    <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+                </h1>
+
+                <p class="container mt-5">
+                    <h4 class="text-primary">
+                      An innovative WebGIS Bot project  
+                    </h4>
+                    <p>
+                        An innovative WebGIS project integrating an intelligent chatbot to facilitate spatial analysis and interaction with geospatial data layers. This project allows users to ask questions, explore, and analyze geographic data in an intuitive and interactive way.
+                    </p>
+                </p>
+
+            </div>
+
+            <div class="sidebar-pane" id="loadingdata">
+                <h1 class="sidebar-header">Load Data<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+            </div>
+
+            <div class="sidebar-pane" id="chat">
+                <h1 class="sidebar-header">Chat<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+                <!-- <div id="chatbox">
+                    <div id="chat-area"></div>
+                    <input type="text" id="user-input" placeholder="Posez une question..." />
+                    <button onclick="sendMessage()">Envoyer</button>
+                </div>    -->
+
+                <div class="chatbox" id="chatbox">
+                    <div class="chat-message bot">Bonjour ! Je vais vous aider à vous connecter à la base de données PostgreSQL.</div>
+                </div>
+                
+                <div class="input-container">
+                    <input type="text" id="db_name" placeholder="Nom de la base de données" style="display:none;">
+                    <input type="text" id="host" placeholder="Hôte de la base de données" style="display:none;">
+                    <input type="text" id="user" placeholder="Utilisateur" style="display:none;">
+                    <input type="password" id="password" placeholder="Mot de passe" style="display:none;">
+                    <button id="sendBtn">Envoyer</button>
+                </div>    
+                
+                <div class="input-container" style="display:none;">
+                    <label for="layers">Sélectionnez les couches à charger :</label>
+                    <select multiple id="layers"></select>
+                    <button id="loadLayersBtn">Charger les couches</button>
+                </div>
+                
+                <div class="input-container" style="display:none;">
+                    <input type="text" id="prompt" placeholder="Envoyer un prompt SQL" />
+                    <button id="sendPromptBtn">Envoyer</button>
+                </div>
+
+            </div>
+
+            <div class="sidebar-pane" id="settings">
+                <h1 class="sidebar-header">Settings<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div id="map" class="sidebar-map"></div>
+
+    <!-- Link to external JavaScript file -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.0/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.0/leaflet-src.js"></script> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
+    <script type="module" src="{{ url_for('static',filename='plugins/sidebar2/leaflet-sidebar.js') }}"></script> 
+    <script type="module" src="{{ url_for('static',filename='plugins/jquery/jquery-3.2.0.js') }}"></script> 
+    <script type="module" src="{{ url_for('static',filename='plugins/jquery/jquery-ui.min.js') }}"></script> 
+    <script type="module" src="{{ url_for('static', filename='js/map.js') }}"></script>
+    <script  src="{{ url_for('static', filename='js/chat.js') }}"></script>
+    
+</body>
+</html>

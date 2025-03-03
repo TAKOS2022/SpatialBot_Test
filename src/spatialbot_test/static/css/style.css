@@ -1,0 +1,3 @@
+#map { height: 180vh; }
+
+body { overflow: hidden; } /* Prevents page scrolling */
