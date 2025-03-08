@@ -16,7 +16,8 @@ def connect_to_db(db_user="justin", db_password="Jesus-2016", db_host="localhost
 def get_layers_names():
     with connect_to_db().connect() as connection:
         statement = text("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE' AND table_name != 'spatial_ref_sys';")
-        return connection.execute(statement).fetchall()
+        result = connection.execute(statement).fetchall()
+        return [name[0] for name in result]
     
 def load_selected_layer(layer_input, tables_names):
     result = []
@@ -26,6 +27,7 @@ def load_selected_layer(layer_input, tables_names):
         else:
             result.append(item.strip())
     return result
+
 
 def test_setup_openai_1():
     completion = client.chat.completions.create(
@@ -137,6 +139,8 @@ def test_intersection():
 def call_function(name, args):
     if name == "get_intersection":
         return get_intersection(**args)
+    if name == "get_layers_names":
+        return get_layers_names()
     
 class IntersectionResponse(BaseModel):
     layer1: str = Field(
@@ -149,8 +153,13 @@ class IntersectionResponse(BaseModel):
         description="The name of the operation apply to the layers. Exemple this can be intersection, buffer etc. All operations relate to spatial interaction"
     )
     response : str = Field(
-        description="A natural language response to the user's question. Example : I have complete the tasks."
+        description="A natural language response to the user's question. Example : I have complete the tasks. What do you want to do next ?"
     )
+
+class LayerListResponse(BaseModel):
+    layers: list[str] = Field(..., description="List of layer names from the database")
+    response: str = Field(..., description="Natural language response explaining the layers. And ask to the user which layer he want to load")
+
 
 
 # A modifier ()
@@ -188,6 +197,9 @@ if __name__=="__main__":
     #     json.dump(result, json_file, indent=4)
     #     print("json dumps save : ", json.dump(result, json_file, indent=4))
 
+    
+    # print(get_layers_names())
+
     tools = [
         {
         "type": "function",
@@ -205,18 +217,34 @@ if __name__=="__main__":
             }, 
             "strict" : True
         }
+        }, 
+        {
+        "type": "function",
+        "function": {
+            "name": "get_layers_names",
+            "description": "Get the name of the layers in the database", 
+            "parameters": {
+            "type": "object",
+            "properties": {},
+            "required": [], 
+            "additionalProperties": False
+            }, 
+            "strict" : True
+        }
         }
     ]
+
+    
 
     system_prompt = "You are a helpful spatial analyst assistant."
     messages = [
     {"role": "system", "content": system_prompt},
-   {"role": "user", "content" :"What is spatial intersection between vcom and emprise" }
+    {"role": "user", "content" :"what is the name of the layers in the database"}
     ]
 
     completion = client.chat.completions.create(
         model="gpt-4o-2024-08-06",
-        messages=[{"role": "user", "content" :"What is spatial intersection between vcom and Emprise" }],
+        messages=messages,
         tools=tools
     )
 
@@ -237,13 +265,15 @@ if __name__=="__main__":
         model="gpt-4o-2024-08-06", 
         messages=messages, 
         tools=tools,
-        response_format=IntersectionResponse
+        response_format=LayerListResponse
     )
 
     final_response = completion_2.choices[0].message.parsed
-    print(final_response.layer1)
-    print(final_response.layer2)
-    print(final_response.operation)
+    # print(final_response.layer1)
+    # print(final_response.layer2)
+    # print(final_response.operation)
+    # print(final_response.response)
+    # print(final_response.layers)
     print(final_response.response)
 
 
